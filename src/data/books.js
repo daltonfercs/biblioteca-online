@@ -1,0 +1,7 @@
+export const books = [
+  { id: 1, title: "Cien años de soledad", author: "Gabriel García Márquez", isbn: "978-0307474728", category: "Novela", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3HyJszEBBsOkWKXgyQ0U1ZxJYMzuTuI-2hw&s", description: "La historia de la familia Buendía.", available: true },
+  { id: 2, title: "Clean Code", author: "Robert C. Martin", isbn: "978-0132350884", category: "Software", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRD3_XaypHG3td10NZtLc-OvB9iteYUDVGp-w&s", description: "Manual de desarrollo ágil de software.", available: true },
+  { id: 3, title: "El Principito", author: "Antoine de Saint-Exupéry", isbn: "978-0156012195", category: "Infantil", cover: "https://images.cdn3.buscalibre.com/fit-in/360x360/02/fb/02fb19970ccf22763313a73744bfdaf7.jpg", description: "Un cuento poético y filosófico.", available: true },
+  { id: 4, title: "1984", author: "George Orwell", isbn: "978-0451524935", category: "Ciencia Ficción", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgABV7JJClHBTauFqHgw_Ju3wghw97cft-5Q&s", description: "Novela política de distopía.", available: true },
+  { id: 5, title: "Dune", author: "Frank Herbert", isbn: "978-0441172719", category: "Ciencia Ficción", cover: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUv50XfIOnbXJ_97KbD7jrnE_OjSaI7qBGfg&s", description: "Épica de ciencia ficción.", available: true },
+];
