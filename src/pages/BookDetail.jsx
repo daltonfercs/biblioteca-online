@@ -1,12 +1,13 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { books } from '../data/books';
+import { useBooks } from '../context/BooksContext';
 import RentalButton from '../components/features/RentalButton';
 import PageTitle from '../components/ui/PageTitle';
 
 const BookDetail = () => {
   const { id } = useParams();
-  const book = books.find(b => b.id === parseInt(id));
+  const { getBook } = useBooks();
+  const book = getBook(parseInt(id));
 
   if (!book) return <div>Libro no encontrado</div>;
 
