@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
-import { books as allBooks } from '../data/books';
+import { useState, useEffect, useContext } from 'react';
+import { BooksContext } from '../context/BooksContext';
 
 export const useBookSearch = () => {
+  const context = useContext(BooksContext);
+  const allBooks = context ? context.books : [];
   const [query, setQuery] = useState("");
   const [results, setResults] = useState(allBooks);
 
@@ -12,7 +14,7 @@ export const useBookSearch = () => {
       book.author.toLowerCase().includes(lowerQuery)
     );
     setResults(filtered);
-  }, [query]);
+  }, [query, allBooks]);
 
   return { query, setQuery, results };
 };
