@@ -94,3 +94,31 @@ INSERT INTO books (id, title, author, isbn, category, cover, description, availa
 -- Insertar usuario de prueba (password: 'password123' - deberías hashearlo en producción)
 INSERT INTO users (name, email, password) VALUES
 ('Usuario Demo', 'demo@biblioteca.com', '$2a$10$YourHashedPasswordHere');
+
+
+-- 1. Crear usuarios adicionales (El ID 1 ya es 'Usuario Demo')
+INSERT INTO users (name, email, password) VALUES
+('Dalton Developer', 'dalton@dev.com', '$2a$10$FakeHashForTest123'),
+('Ana Tester', 'ana@test.com', '$2a$10$FakeHashForTest456');
+
+-- 2. Simular un CARRITO para el Usuario 1 (Usuario Demo)
+-- Esto te permitirá probar GET /api/cart/1 inmediatamente
+INSERT INTO cart_items (user_id, book_id, quantity, rental_days, added_at) VALUES
+(1, 4, 1, 7, NOW()),  -- Libro ID 4: 1984
+(1, 12, 1, 14, NOW()); -- Libro ID 12: Python para Todos (Renta por 2 semanas)
+
+-- 3. Simular RENTAS ACTIVAS (Para probar /api/rentals/user/1/active)
+-- Estas aparecerán en la sección "Mis Alquileres" como pendientes de devolución
+INSERT INTO rentals (user_id, book_id, rental_date, return_date, status, total_price) VALUES
+(1, 2, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'active', 45000.00), -- Clean Code
+(1, 5, NOW(), DATE_ADD(NOW(), INTERVAL 7 DAY), 'active', 32000.00); -- Dune
+
+-- 4. Simular HISTORIAL DE RENTAS (Ya devueltas)
+-- Para probar historiales o reportes
+INSERT INTO rentals (user_id, book_id, rental_date, return_date, actual_return_date, status, total_price) VALUES
+(1, 3, DATE_SUB(NOW(), INTERVAL 30 DAY), DATE_SUB(NOW(), INTERVAL 23 DAY), DATE_SUB(NOW(), INTERVAL 22 DAY), 'returned', 20000.00), -- El Principito
+(1, 10, DATE_SUB(NOW(), INTERVAL 60 DAY), DATE_SUB(NOW(), INTERVAL 53 DAY), DATE_SUB(NOW(), INTERVAL 53 DAY), 'returned', 28000.00); -- Harry Potter
+
+-- 5. Simular datos para otro usuario (Dalton - ID 2)
+INSERT INTO cart_items (user_id, book_id, quantity, rental_days) VALUES
+(2, 1, 1, 30); -- Cien años de soledad para Dalton
