@@ -20,30 +20,26 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const register = (email, password, name) => {
-    // Verificar si el usuario ya existe
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    if (users.some(u => u.email === email)) {
-      return { success: false, error: 'El correo ya está registrado' };
-    }
-
-    // Crear nuevo usuario
-    const newUser = {
-      id: Date.now(),
-      email,
-      password,
-      name,
-      createdAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-
-    // Hacer login automático
-    const { password: _, ...userWithoutPassword } = newUser;
-    setUser(userWithoutPassword);
-    localStorage.setItem('currentUser', JSON.stringify(userWithoutPassword));
-
-    return { success: true };
+    // Crear usuario en el backend
+    return fetch('http://localhost:8082/api/users', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name })
+    })
+      .then(async res => {
+        if (!res.ok) {
+          const error = await res.text();
+          return { success: false, error };
+        }
+        const user = await res.json();
+        // Guardar usuario en localStorage y hacer login automático
+        setUser(user);
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        return { success: true };
+      })
+      .catch(err => {
+        return { success: false, error: 'Error de red o servidor' };
+      });
   };
 
   const login = (email, password) => {

@@ -1,51 +1,50 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { books as initialBooks } from '../data/books';
 
 export const BooksContext = createContext();
 
 export const BooksProvider = ({ children }) => {
-  const [books, setBooks] = useState(initialBooks);
+  const [books, setBooks] = useState([]);
 
-  // Cargar stock desde localStorage al montar
+  // Obtener libros desde la API al montar
   useEffect(() => {
-    const savedStock = localStorage.getItem('booksStock');
-    if (savedStock) {
-      try {
-        const stockMap = JSON.parse(savedStock);
-        const updatedBooks = initialBooks.map(book => ({
-          ...book,
-          stock: stockMap[book.id] !== undefined ? stockMap[book.id] : book.stock
-        }));
-        setBooks(updatedBooks);
-      } catch (error) {
-        console.error('Error cargando stock:', error);
-      }
-    }
+    fetch('http://localhost:8082/api/books')
+      .then(res => res.json())
+      .then(data => setBooks(data))
+      .catch(err => console.error('Error al obtener libros:', err));
   }, []);
 
-  // Guardar stock en localStorage cuando cambia
-  useEffect(() => {
-    const stockMap = {};
-    books.forEach(book => {
-      stockMap[book.id] = book.stock;
-    });
-    localStorage.setItem('booksStock', JSON.stringify(stockMap));
-  }, [books]);
-
-  const decreaseStock = (bookId, quantity = 1) => {
-    setBooks(books.map(book => 
-      book.id === bookId 
-        ? { ...book, stock: Math.max(0, book.stock - quantity) }
-        : book
-    ));
+  // Refrescar libros desde la API
+  const refreshBooks = () => {
+    fetch('http://localhost:8082/api/books')
+      .then(res => res.json())
+      .then(data => setBooks(data))
+      .catch(err => console.error('Error al refrescar libros:', err));
   };
 
-  const increaseStock = (bookId, quantity = 1) => {
-    setBooks(books.map(book => 
-      book.id === bookId 
-        ? { ...book, stock: book.stock + quantity }
-        : book
-    ));
+  // Alquilar libro (decrementar stock en backend)
+  const rentBook = async (bookId) => {
+    try {
+      await fetch(`http://localhost:8082/api/books/${bookId}/rent`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      refreshBooks();
+    } catch (err) {
+      console.error('Error al alquilar libro:', err);
+    }
+  };
+
+  // Devolver libro (incrementar stock en backend)
+  const returnBook = async (bookId) => {
+    try {
+      await fetch(`http://localhost:8082/api/books/${bookId}/return`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      refreshBooks();
+    } catch (err) {
+      console.error('Error al devolver libro:', err);
+    }
   };
 
   const getBook = (bookId) => {
@@ -54,9 +53,10 @@ export const BooksProvider = ({ children }) => {
 
   const value = {
     books,
-    decreaseStock,
-    increaseStock,
-    getBook
+    rentBook,
+    returnBook,
+    getBook,
+    refreshBooks
   };
 
   return (

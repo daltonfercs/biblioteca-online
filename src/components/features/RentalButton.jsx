@@ -7,12 +7,15 @@ import { useBooks } from '../../context/BooksContext';
 const RentalButton = ({ book, isRental = false }) => {
   const { addToCart, removeFromCart, isInCart } = useCart();
   const { toggleRental } = useRentals();
-  const { increaseStock } = useBooks();
+  const { returnBook } = useBooks();
   
   if (isRental) {
-    const handleReturnRental = () => {
-      increaseStock(book.id, 1);
-      toggleRental(book);
+    const handleReturnRental = async () => {
+      await returnBook(book.id);
+      // Esperar un pequeño tiempo para asegurar que el stock se refresque
+      setTimeout(() => {
+        toggleRental(book);
+      }, 300);
     };
 
     return (

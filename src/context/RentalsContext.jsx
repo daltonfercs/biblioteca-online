@@ -3,14 +3,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const RentalsContext = createContext();
 
 export const RentalsProvider = ({ children }) => {
-  const [rentals, setRentals] = useState([]);
+  const [rentalIds, setRentalIds] = useState([]);
 
   // Cargar alquileres del localStorage al montar
   useEffect(() => {
-    const stored = localStorage.getItem('myRentals');
+    const stored = localStorage.getItem('myRentalIds');
     if (stored) {
       try {
-        setRentals(JSON.parse(stored));
+        setRentalIds(JSON.parse(stored));
       } catch (error) {
         console.error('Error cargando alquileres:', error);
       }
@@ -19,47 +19,35 @@ export const RentalsProvider = ({ children }) => {
 
   // Guardar alquileres en localStorage cuando cambian
   useEffect(() => {
-    localStorage.setItem('myRentals', JSON.stringify(rentals));
-  }, [rentals]);
+    localStorage.setItem('myRentalIds', JSON.stringify(rentalIds));
+  }, [rentalIds]);
 
   const toggleRental = (book) => {
-    const exists = rentals.find(r => r.id === book.id);
+    const exists = rentalIds.includes(book.id);
     if (exists) {
       // Devolver el libro
-      setRentals(rentals.filter(r => r.id !== book.id));
+      setRentalIds(rentalIds.filter(id => id !== book.id));
     } else {
       // Alquilar el libro
-      const rentalData = {
-        ...book,
-        rentalDate: new Date().toISOString(),
-        rentalId: `rental_${book.id}_${Date.now()}`
-      };
-      setRentals([...rentals, rentalData]);
+      setRentalIds([...rentalIds, book.id]);
     }
   };
 
   const isRented = (id) => {
-    return rentals.some(r => r.id === id);
+    return rentalIds.includes(id);
   };
 
-  const getRentalInfo = (id) => {
-    return rentals.find(r => r.id === id);
-  };
+  // Ya no se necesita getRentalInfo
 
   const addRentalsFromCart = (cartItems) => {
-    const newRentals = cartItems.map(book => ({
-      ...book,
-      rentalDate: new Date().toISOString(),
-      rentalId: `rental_${book.id}_${Date.now()}`
-    }));
-    setRentals([...rentals, ...newRentals]);
+    const newIds = cartItems.map(book => book.id);
+    setRentalIds([...new Set([...rentalIds, ...newIds])]);
   };
 
   const value = {
-    rentals,
+    rentalIds,
     toggleRental,
     isRented,
-    getRentalInfo,
     addRentalsFromCart
   };
 

@@ -8,10 +8,10 @@ import Loading from '../components/ui/Loading';
 
 const ConfirmRental = () => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { cartItems, clearCart } = useCart();
   const { addRentalsFromCart } = useRentals();
-  const { decreaseStock } = useBooks();
+  const { rentBook } = useBooks();
 
   useEffect(() => {
     // Si no está autenticado, redirigir a login
@@ -25,21 +25,29 @@ const ConfirmRental = () => {
       return;
     }
 
-    // Descontar stock para cada item
-    cartItems.forEach(item => {
-      decreaseStock(item.id, 1);
-    });
-
-    // Agregar los items del carrito a los alquileres
-    addRentalsFromCart(cartItems);
-    // Limpiar el carrito
-    clearCart();
-    // Redirigir a mis alquileres después de 2 segundos
-    const timer = setTimeout(() => {
-      navigate('/mis-alquileres');
-    }, 2000);
-
-    return () => clearTimeout(timer);
+    // Descontar stock y registrar alquiler en backend para cada item
+    const processRentals = async () => {
+      for (const item of cartItems) {
+        // Descontar stock
+        await rentBook(item.id);
+        // Registrar alquiler en backend
+        if (user && user.id) {
+          await fetch(`http://localhost:8082/api/rentals?userId=${user.id}&bookId=${item.id}&quantity=${item.quantity || 1}`, {
+            method: 'POST'
+          });
+        }
+      }
+      // Agregar los items del carrito a los alquileres locales
+      addRentalsFromCart(cartItems);
+      // Limpiar el carrito
+      clearCart();
+      // Redirigir a mis alquileres después de 2 segundos
+      setTimeout(() => {
+        navigate('/mis-alquileres');
+      }, 2000);
+    };
+    processRentals();
+    // No se necesita limpiar timer porque no hay clearTimeout
   }, []);
 
   return (
