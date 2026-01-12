@@ -7,7 +7,7 @@ export const BooksProvider = ({ children }) => {
 
   // Obtener libros desde la API al montar
   useEffect(() => {
-    fetch('http://localhost:8082/api/books')
+    fetch(`${import.meta.env.VITE_API_URL}/api/books`)
       .then(res => res.json())
       .then(data => setBooks(data))
       .catch(err => console.error('Error al obtener libros:', err));
@@ -15,7 +15,7 @@ export const BooksProvider = ({ children }) => {
 
   // Refrescar libros desde la API
   const refreshBooks = () => {
-    fetch('http://localhost:8082/api/books')
+    fetch(`${import.meta.env.VITE_API_URL}/api/books`)
       .then(res => res.json())
       .then(data => setBooks(data))
       .catch(err => console.error('Error al refrescar libros:', err));
@@ -24,7 +24,7 @@ export const BooksProvider = ({ children }) => {
   // Alquilar libro (decrementar stock en backend)
   const rentBook = async (bookId) => {
     try {
-      await fetch(`http://localhost:8082/api/books/${bookId}/rent`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/books/${bookId}/rent`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });
@@ -37,7 +37,7 @@ export const BooksProvider = ({ children }) => {
   // Devolver libro (incrementar stock en backend)
   const returnBook = async (bookId) => {
     try {
-      await fetch(`http://localhost:8082/api/books/${bookId}/return`, {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/books/${bookId}/return`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' }
       });

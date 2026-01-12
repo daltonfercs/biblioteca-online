@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = (email, password, name) => {
     // Crear usuario en el backend
-    return fetch('http://localhost:8082/api/users', {
+    return fetch(`${import.meta.env.VITE_API_URL}/api/users`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, name })

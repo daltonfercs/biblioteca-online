@@ -12,7 +12,7 @@ const EditBook = () => {
   const { user } = useAuth();
 
   useEffect(() => {
-    fetch(`http://localhost:8082/api/books/${id}`)
+    fetch(`${import.meta.env.VITE_API_URL}/api/books/${id}`)
       .then(res => res.json())
       .then(data => {
         setForm({
@@ -48,7 +48,7 @@ const EditBook = () => {
     setError('');
     setSuccess(false);
     try {
-      const res = await fetch(`http://localhost:8082/api/books/${id}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/books/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

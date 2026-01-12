@@ -20,7 +20,7 @@ const DeleteBook = () => {
     setError('');
     setSuccess(false);
     try {
-      const res = await fetch(`http://localhost:8082/api/books/${bookId}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/books/${bookId}`, {
         method: 'DELETE',
       });
       if (!res.ok) throw new Error('No se pudo eliminar el libro');

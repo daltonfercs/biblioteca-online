@@ -32,7 +32,7 @@ const ConfirmRental = () => {
         await rentBook(item.id);
         // Registrar alquiler en backend
         if (user && user.id) {
-          await fetch(`http://localhost:8082/api/rentals?userId=${user.id}&bookId=${item.id}&quantity=${item.quantity || 1}`, {
+          await fetch(`${import.meta.env.VITE_API_URL}/api/rentals?userId=${user.id}&bookId=${item.id}&quantity=${item.quantity || 1}`, {
             method: 'POST'
           });
         }
