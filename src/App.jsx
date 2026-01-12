@@ -12,6 +12,19 @@ import ShoppingCart from './pages/ShoppingCart';
 import ConfirmRental from './pages/ConfirmRental';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
+import AddBook from './pages/AddBook';
+import EditBook from './pages/EditBook';
+import DeleteBook from './pages/DeleteBook';
+import { useAuth } from './context/AuthContext';
+
+
+function AdminRoute({ children }) {
+  const { user } = useAuth();
+  if (user && user.email === 'demo@biblioteca.com') {
+    return children;
+  }
+  return <NotFound />;
+}
 
 function App() {
   return (
@@ -21,17 +34,32 @@ function App() {
           <RentalsProvider>
             <CartProvider>
               <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/catalogo" element={<Catalog />} />
-                <Route path="/libro/:id" element={<BookDetail />} />
-                <Route path="/carrito" element={<ShoppingCart />} />
-                <Route path="/confirmar-alquiler" element={<ConfirmRental />} />
-                <Route path="/mis-alquileres" element={<MyRentals />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/catalogo" element={<Catalog />} />
+                  <Route path="/libro/:id" element={<BookDetail />} />
+                  <Route path="/carrito" element={<ShoppingCart />} />
+                  <Route path="/confirmar-alquiler" element={<ConfirmRental />} />
+                  <Route path="/mis-alquileres" element={<MyRentals />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/agregar-libro" element={
+                    <AdminRoute>
+                      <AddBook />
+                    </AdminRoute>
+                  } />
+                  <Route path="/editar-libro/:id" element={
+                    <AdminRoute>
+                      <EditBook />
+                    </AdminRoute>
+                  } />
+                  <Route path="/eliminar-libro" element={
+                    <AdminRoute>
+                      <DeleteBook />
+                    </AdminRoute>
+                  } />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Layout>
             </CartProvider>
           </RentalsProvider>
         </BooksProvider>

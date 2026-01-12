@@ -24,6 +24,12 @@ const Header = () => {
           <Link to="/" className="header__link">Inicio</Link>
           <Link to="/catalogo" className="header__link">Catálogo</Link>
           {isAuthenticated() && <Link to="/mis-alquileres" className="header__link">Mis Alquileres</Link>}
+          {user && user.email === 'demo@biblioteca.com' && (
+            <>
+              <Link to="/agregar-libro" className="header__link">Agregar Libro</Link>
+                <Link to="/eliminar-libro" className="header__link">Eliminar Libro</Link>
+            </>
+          )}
         </nav>
         <div className="header__actions">
           <Link to="/carrito" className="header__cart-link">
