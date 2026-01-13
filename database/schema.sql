@@ -1,6 +1,6 @@
 -- Crear base de datos
-CREATE DATABASE IF NOT EXISTS biblioteca_online;
-USE biblioteca_online;
+CREATE DATABASE IF NOT EXISTS railway;
+USE railway;
 
 -- Tabla de usuarios
 CREATE TABLE IF NOT EXISTS users (
