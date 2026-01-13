@@ -14,14 +14,14 @@ const ShoppingCart = () => {
     return (
       <div className="shopping-cart">
         <PageTitle title="Mi Carrito de Alquileres" />
-        <EmptyState 
+        <EmptyState
           title="Tu carrito está vacío"
           message="Agrega libros al carrito desde el catálogo para comenzar"
         />
         <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <button 
+          <button
             onClick={() => navigate('/catalogo')}
-            className="button button--primary" 
+            className="button button--primary"
             style={{ display: 'inline-block' }}
           >
             Ir al Catálogo
@@ -37,7 +37,7 @@ const ShoppingCart = () => {
   return (
     <div className="shopping-cart">
       <PageTitle title="Mi Carrito de Alquileres" />
-      
+
       <div className="shopping-cart__container">
         <div className="shopping-cart__items">
           <div className="shopping-cart__header">
@@ -49,7 +49,27 @@ const ShoppingCart = () => {
           <div className="shopping-cart__list">
             {cartItems.map(item => (
               <div key={item.id} className="cart-item">
-                <img src={item.cover} alt={item.title} className="cart-item__image" />
+              <img src={item.book?.cover} alt={item.book?.title} className="cart-item-cover" />
+    
+               <div className="cart-item-details">
+                  <h3>{item.book?.title}</h3>
+                  <p className="cart-item-author">{item.book?.author}</p>
+      
+                  <div className="cart-item-price">
+                     {/* Calcula precio usando item.book.price */}
+                    ${item.book?.price?.toLocaleString()} x {item.rentalDays} días
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => removeFromCart(item.book.id)} // OJO: item.book.id
+                  className="remove-btn"
+                >
+                  <Trash2 size={20} />
+                </button>
+              </div>
+          {/*<div key={item.id} className="cart-item">
+                <img src={item.book?.cover} alt={item.book?.title} className="cart-item-cover" />
                 
                 <div className="cart-item__info">
                   <h3 className="cart-item__title">{item.title}</h3>
@@ -74,60 +94,62 @@ const ShoppingCart = () => {
                     🗑️
                   </button>
                 </div>
-              </div>
+              </div>*/}
+
+
             ))}
-          </div>
         </div>
-
-        <aside className="shopping-cart__summary">
-          <div className="cart-summary">
-            <h2 className="cart-summary__title">Resumen del Carrito</h2>
-            
-            <div className="cart-summary__section">
-              <p className="cart-summary__label">Libros:</p>
-              <p className="cart-summary__value">{cartItems.length}</p>
-            </div>
-
-            <div className="cart-summary__section">
-              <p className="cart-summary__label">Subtotal (30 días):</p>
-              <p className="cart-summary__value">${total.toLocaleString()}</p>
-            </div>
-
-            <div className="cart-summary__divider"></div>
-
-            <div className="cart-summary__section cart-summary__section--total">
-              <p className="cart-summary__label">Total:</p>
-              <p className="cart-summary__total">${total.toLocaleString()}</p>
-            </div>
-
-            <p className="cart-summary__info">
-              📅 Alquiler por 30 días desde la confirmación
-            </p>
-
-            <div className="cart-summary__actions">
-              <button 
-                onClick={clearCart}
-                className="button button--secondary"
-                style={{ width: '100%' }}
-              >
-                Vaciar Carrito
-              </button>
-              <button 
-                onClick={() => navigate('/confirmar-alquiler')}
-                className="button button--primary"
-                style={{ width: '100%' }}
-              >
-                Confirmar Alquiler
-              </button>
-            </div>
-
-            <p className="cart-summary__daily">
-              💡 Aproximadamente ${dailyRate.toLocaleString()} por día
-            </p>
-          </div>
-        </aside>
       </div>
+
+      <aside className="shopping-cart__summary">
+        <div className="cart-summary">
+          <h2 className="cart-summary__title">Resumen del Carrito</h2>
+
+          <div className="cart-summary__section">
+            <p className="cart-summary__label">Libros:</p>
+            <p className="cart-summary__value">{cartItems.length}</p>
+          </div>
+
+          <div className="cart-summary__section">
+            <p className="cart-summary__label">Subtotal (30 días):</p>
+            <p className="cart-summary__value">${total.toLocaleString()}</p>
+          </div>
+
+          <div className="cart-summary__divider"></div>
+
+          <div className="cart-summary__section cart-summary__section--total">
+            <p className="cart-summary__label">Total:</p>
+            <p className="cart-summary__total">${total.toLocaleString()}</p>
+          </div>
+
+          <p className="cart-summary__info">
+            📅 Alquiler por 30 días desde la confirmación
+          </p>
+
+          <div className="cart-summary__actions">
+            <button
+              onClick={clearCart}
+              className="button button--secondary"
+              style={{ width: '100%' }}
+            >
+              Vaciar Carrito
+            </button>
+            <button
+              onClick={() => navigate('/confirmar-alquiler')}
+              className="button button--primary"
+              style={{ width: '100%' }}
+            >
+              Confirmar Alquiler
+            </button>
+          </div>
+
+          <p className="cart-summary__daily">
+            💡 Aproximadamente ${dailyRate.toLocaleString()} por día
+          </p>
+        </div>
+      </aside>
     </div>
+    </div >
   );
 };
 

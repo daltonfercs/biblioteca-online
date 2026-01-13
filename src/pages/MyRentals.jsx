@@ -21,7 +21,33 @@ const MyRentals = () => {
   }
 
   return (
-    <div className="page-rentals">
+
+    {rentals.map(rental => (
+  <div key={rental.id} className="rental-card">
+    <div className="rental-image">
+       {/* Añade .book aquí también */}
+      <img src={rental.book?.cover} alt={rental.book?.title} />
+      <span className="rental-status active">Activo</span>
+    </div>
+    <div className="rental-details">
+      <h3>{rental.book?.title}</h3>
+      <p className="rental-author">{rental.book?.author}</p>
+      
+      <div className="rental-info">
+        <div className="info-item">
+          <Calendar size={16} />
+          {/* Formatea la fecha que viene del backend */}
+          <span>Devolver: {new Date(rental.returnDate).toLocaleDateString()}</span>
+        </div>
+      </div>
+
+      <button onClick={() => returnBook(rental.id)} className="return-btn">
+        Devolver Libro
+      </button>
+    </div>
+  </div>
+))}
+    /*<div className="page-rentals">
       <PageTitle title="Mis Alquileres Activos" />
       {myBooks.length > 0 ? (
         <>
@@ -36,7 +62,7 @@ const MyRentals = () => {
           message="Ve al catálogo y alquila un libro para comenzar"
         />
       )}
-    </div>
+    </div>*/
   );
 };
 export default MyRentals;
